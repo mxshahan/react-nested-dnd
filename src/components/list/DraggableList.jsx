@@ -139,6 +139,35 @@ const DraggableList = () => {
     setData(list);
   };
 
+  const onUpdateItem = (text, item, index) => {
+    // const newItem = { ...item, name: text };
+    const list = Array.from(data || []);
+    list.splice(index, 1, item);
+    setData(list);
+    // console.log(text, item, index);
+    // const newItem = { ...item, name: text };
+    // const list = Array.from(data);
+    // list[index] = newItem;
+    // setData(list);
+  };
+
+  const onUpdateSubItem = (text, sub, index, item, itemIndex) => {
+    // const newItem = { ...sub, name: text };
+    const list = Array.from(data || []);
+    list[itemIndex].items.splice(index, 1, sub);
+    setData(list);
+    // const newItem = { ...sub };
+    // const list = Array.from(data || []);
+    // console.log(list)
+    // const subList = list[itemIndex].items;
+    // const subIndex =
+    //   Array.isArray(subList) && subList.findIndex((d) => d.id === sub.id);
+    // Object.assign(newItem, { name: text });
+    // list[itemIndex].items.splice(subIndex, 1, newItem);
+    // setData(list);
+  };
+
+
   const onSelectEpisode = (item, sub, itemIndex, subIndex) => {
     setItemIndex(itemIndex);
     setSubIndex(subIndex);
@@ -209,7 +238,7 @@ const DraggableList = () => {
                 >
                   {data.map((item, index) => (
                     <ListPanel
-                      key={item.id}
+                      key={index} // It should be replaced after connecting api
                       item={item}
                       index={index}
                       onDuplicate={() => onDuplicateItem(item, index)}
@@ -223,6 +252,8 @@ const DraggableList = () => {
                       onSelectEpisode={onSelectEpisode}
                       collapseOpen={selectedItem && selectedItem.id}
                       selctedEpisode={subItem}
+                      onUpdateItem={onUpdateItem}
+                      onUpdateSubItem={onUpdateSubItem}
                     />
                   ))}
                   {provided.placeholder}

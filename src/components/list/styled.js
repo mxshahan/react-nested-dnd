@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { List, Collapse } from "antd";
+import ContentEditable from "react-contenteditable";
 
 export const ListItemStyled = styled(List.Item)`
   border-radius: 10px;
   padding: 20px;
   background-color: ${(props) => (props.disabled ? "#ddd" : "#fff")};
-  .ant-typography {
+  article {
     color: ${(props) => (props.selected ? "#ff6c16" : "#000")};
   }
 `;
@@ -17,9 +18,11 @@ export const PanelStyled = styled(Collapse.Panel)`
     align-items: center;
     justify-content: space-between;
     display: flex;
-    padding: 0px 10px !important;
+    padding: 0px 5px !important;
     ${(props) => {
-      if (props.selected) {
+      if (props.isDragging) {
+        return { backgroundColor: "#6a2ae6" };
+      } else if (props.selected) {
         return { backgroundColor: "#6a2ae6", color: "white !important" };
       } else {
         return props.disabled
@@ -51,4 +54,20 @@ export const PanelStyled = styled(Collapse.Panel)`
 
 export const CollapseStyled = styled(Collapse)`
   background-color: transparent;
+`;
+
+export const EditableContainer = styled.span`
+  display: flex;
+  align-items: center;
+`;
+
+export const EditableStyled = styled(ContentEditable)`
+  max-width: 120px;
+  box-shadow: 0px none;
+  width: 100%;
+  padding: 0px 5px;
+  margin-left: 5px;
+  &:focus {
+    outline: 0.5px solid #ddd;
+  }
 `;

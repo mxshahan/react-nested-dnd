@@ -1,10 +1,9 @@
 import React from "react";
-import { Typography, Dropdown, Menu } from "antd";
-import { ListItemStyled } from "./styled";
-import { MoreOutlined } from "@ant-design/icons";
+import { Dropdown, Menu } from "antd";
+import { ListItemStyled, EditableStyled, EditableContainer } from "./styled";
+import { MoreOutlined, MenuOutlined } from "@ant-design/icons";
 import { Draggable } from "react-beautiful-dnd";
 import PropTypes from "prop-types";
-
 
 const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
   const menu = (
@@ -24,6 +23,19 @@ const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
     </Menu>
   );
 
+  const text = React.useRef(null);
+
+  const onBlur = () => {
+    if (text.current) {
+      Object.assign(item, { name: text.current });
+      props.onUpdateSubItem(text.current, item);
+    }
+  };
+
+  const onChangeName = (e) => {
+    text.current = e.target.value;
+  };
+
   return (
     <Draggable
       key={item.id}
@@ -38,8 +50,6 @@ const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
           style={{
             ...provided.draggableProps.style,
             marginTop: 10,
-            marginLeft: 10,
-            marginRight: 10,
           }}
         >
           <ListItemStyled
@@ -47,7 +57,16 @@ const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
             onClick={props.onSelectEpisode}
             selected={selctedEpisode && selctedEpisode.id === item.id}
           >
-            <Typography>{item.name}</Typography>
+            <EditableContainer>
+              <MenuOutlined onClick={onBlur} />
+              <EditableStyled
+                html={item.name}
+                disabled={false}
+                onBlur={onBlur}
+                onChange={onChangeName}
+                tagName="article"
+              />
+            </EditableContainer>
             <Dropdown overlay={menu} trigger={["click"]}>
               <MoreOutlined />
             </Dropdown>

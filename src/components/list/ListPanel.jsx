@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Dropdown, Menu } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, MenuOutlined } from "@ant-design/icons";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { PanelStyled, CollapseStyled } from "./styled";
+import {
+  PanelStyled,
+  CollapseStyled,
+  EditableStyled,
+  EditableContainer,
+} from "./styled";
 import ListItem from "./ListItem";
 
 const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
-  const onClickDropdown = (e) => {
+  const preventCollapse = (e) => {
     e.stopPropagation();
   };
 
@@ -62,6 +67,20 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collapseOpen]);
 
+  const text = React.useRef(null);
+  const itemRef = React.useRef(item.id);
+
+  const onBlur = () => {
+    if (text.current) {
+      Object.assign(item, { name: text.current });
+      props.onUpdateItem(text.current, item, props.index);
+    }
+  };
+
+  const onChangeName = (e) => {
+    text.current = e.target.value;
+  };
+
   return (
     <Draggable key={item.id} draggableId={String(item.id)} index={props.index}>
       {(provided, _snapshot) => (
@@ -79,22 +98,35 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
             bordered={false}
             activeKey={active}
             onChange={onChange}
+            ref={itemRef}
           >
             <PanelStyled
               key={item.id}
+              // isDragging={provided.isDraggingOver}
               header={
-                <span
+                <div
                   className={`collapse_header `}
                   {...(item.disabled ? {} : { ...provided.dragHandleProps })}
                 >
-                  {item.name}
-                </span>
+                  <EditableContainer>
+                    <MenuOutlined onClick={onBlur} />
+
+                    <EditableStyled
+                      html={item.name}
+                      disabled={false}
+                      onClick={preventCollapse}
+                      onBlur={onBlur}
+                      onChange={onChangeName}
+                      tagName="article"
+                    ></EditableStyled>
+                  </EditableContainer>
+                </div>
               }
               extra={
                 <Dropdown
                   overlay={menu}
                   trigger={["click"]}
-                  onClick={onClickDropdown}
+                  onClick={preventCollapse}
                 >
                   <MoreOutlined />
                 </Dropdown>
@@ -111,7 +143,7 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
                       backgroundColor: snapshot.isDraggingOver
                         ? "#dfdfdf"
                         : "#efefef",
-                      padding: 10,
+                      padding: "5px",
                     }}
                     {...providedd.droppableProps}
                   >
@@ -119,10 +151,20 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
                       item.items.map((sub, index) => (
                         <ListItem
                           parentId={item.id}
-                          key={sub.id}
+                          key={index} // It should be changed after connecting api
                           item={sub}
                           index={index}
                           selctedEpisode={selctedEpisode}
+                          onUpdateSubItem={(_text, _subItem) => {
+                            console.log(text, _text, item);
+                            props.onUpdateSubItem(
+                              text,
+                              _subItem,
+                              index,
+                              item,
+                              props.index
+                            );
+                          }}
                           onDuplicate={() =>
                             props.onDuplicateSubItem(
                               item,
@@ -172,4 +214,4 @@ ListPanel.prototype = {
   onDelete: PropTypes.func,
 };
 
-export default React.memo(ListPanel);
+export default ListPanel;
