@@ -3,6 +3,7 @@ import { Row, Col } from "antd";
 
 import apiData from "./data.json";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { v4 as uuidv4 } from "uuid";
 import ListPanel from "./ListPanel";
 import Content from "./Content";
 
@@ -40,7 +41,6 @@ const DraggableList = () => {
     console.log(source, destination, type);
 
     if (!source || !destination) return;
-
     if (type === "app") {
       const sourceList = Array.from(data || []);
       const [removed] = sourceList.splice(source.index, 1);
@@ -50,92 +50,136 @@ const DraggableList = () => {
       const sourceList = Array.from(data || []);
 
       const sIndex = sourceList.findIndex(
-        (d) => d.id === Number(source.droppableId)
+        (d) => d.item_id === source.droppableId
       );
       const dIndex = sourceList.findIndex(
-        (d) => d.id === Number(destination.droppableId)
+        (d) => d.item_id === destination.droppableId
       );
 
+      console.log(sIndex, dIndex);
+      
+      if (sIndex === -1 || dIndex === -1) return;
+
       if (sIndex === dIndex) {
-        const srcItems = Array.from(sourceList[sIndex].items || []);
+        const srcItems = Array.from(sourceList[sIndex].episodes || []);
 
         const [removed] = srcItems.splice(source.index, 1);
         srcItems.splice(destination.index, 0, removed);
-        sourceList[sIndex].items = srcItems;
+        sourceList[sIndex].episodes = srcItems;
       } else {
-        const srcItems = Array.from(sourceList[sIndex].items || []);
-        const destItems = Array.from(sourceList[dIndex].items || []);
+        const srcItems = Array.from(sourceList[sIndex].episodes || []);
+        const destItems = Array.from(sourceList[dIndex].episodes || []);
 
         // console.log(srcItems, destItems);
         const [removed] = srcItems.splice(source.index, 1);
         destItems.splice(destination.index, 0, removed);
-        sourceList[sIndex].items = srcItems;
-        sourceList[dIndex].items = destItems;
+        sourceList[sIndex].episodes = srcItems;
+        sourceList[dIndex].episodes = destItems;
       }
       // console.log(sourceList);
       setData(sourceList);
     }
   };
 
+  // Fixed
   const onDuplicateItem = (item, index) => {
     const newItem = { ...item };
     const list = Array.from(data || []);
-    Object.assign(newItem, { name: item.name + " Copy", id: item.id + 999 });
+
+    const episodes = newItem.episodes;
+    episodes.map((s) => (s.item_id = uuidv4()));
+
+    Object.assign(newItem, {
+      title: item.title + " Copy",
+      item_id: uuidv4(),
+    });
+
     list.splice(index + 1, 0, newItem);
     setData(list);
   };
 
-  const onDeleteItem = (_item, index) => {
+  // Fixed
+  const onDeleteItem = (_item, _index) => {
     const list = Array.from(data || []);
-    list.splice(index, 1);
-    setData(list);
+    const newList = list.filter((d) => d.item_id !== _item.item_id);
+
+    setData(newList);
   };
 
+  // Fixed
   const onDisableItem = (_item, index) => {
-    const newItem = { ..._item };
     const list = Array.from(data || []);
-    Object.assign(newItem, { disabled: newItem.disabled ? false : true });
-    list.splice(index, 1, newItem);
-    setData(list);
+    const newList = [];
+    list.map((d) =>
+      d.item_id === _item.item_id
+        ? newList.push({ ...d, disabled: _item.disabled ? false : true })
+        : newList.push(d)
+    );
+
+    setData(newList);
   };
 
+  // Fixed
   const onInsertItem = (_item, index) => {
-    const newItem = { name: "Test Name", description: "Test Description" };
+    const newItem = {
+      item_id: uuidv4(),
+      title: "Test Name",
+      episodes: [
+        {
+          title: "Test Episode",
+          item_id: uuidv4(),
+        },
+      ],
+    };
     const list = Array.from(data || []);
     list.splice(index + 1, 0, newItem);
     setData(list);
   };
 
+  // Fixed
   const onDuplicateSubItem = (_item, _sub, itemIndex, subIndex) => {
     const newItem = { ..._sub };
     const list = Array.from(data || []);
-    Object.assign(newItem, { name: _sub.name + " Copy", id: _sub.id + 999 });
-    list[itemIndex].items.splice(subIndex + 1, 0, newItem);
+    Object.assign(newItem, {
+      title: _sub.title + " Copy",
+      item_id: uuidv4(),
+    });
+    list[itemIndex].episodes.splice(subIndex + 1, 0, newItem);
     setData(list);
   };
 
+  // Fixed
   const onDeleteSubItem = (_item, _sub, itemIndex, subIndex) => {
     const list = Array.from(data || []);
-    list[itemIndex].items.splice(subIndex, 1);
+    const index = list.findIndex((d) => d.item_id === _item.item_id);
+    const newSubList = list[index].episodes.filter(
+      (s) => s.item_id !== _sub.item_id
+    );
+    list[index].episodes = newSubList;
     setData(list);
   };
 
   const onDisableSubItem = (_item, _sub, itemIndex, subIndex) => {
-    const newItem = { ..._sub };
     const list = Array.from(data || []);
-    Object.assign(newItem, { disabled: newItem.disabled ? false : true });
-    list[itemIndex].items.splice(subIndex, 1, newItem);
+    const index = list.findIndex((d) => d.item_id === _item.item_id);
+    const newSubList = [];
+    list[index].episodes.map((s) =>
+      s.item_id === _sub.item_id
+        ? newSubList.push({ ...s, disabled: _sub.disabled ? false : true })
+        : newSubList.push(s)
+    );
+    list[index].episodes = newSubList;
     setData(list);
   };
 
   const onInsertSubItem = (_item, _sub, itemIndex, subIndex) => {
     const newItem = {
-      name: "Test Name",
+      title: "Test Name",
       description: "Test Description",
       id: data.length + 1,
     };
     const list = Array.from(data || []);
-    list[itemIndex].items.splice(subIndex + 1, 0, newItem);
+    list[itemIndex].episodes.splice(subIndex + 1, 0, newItem);
     setData(list);
   };
 
@@ -154,19 +198,18 @@ const DraggableList = () => {
   const onUpdateSubItem = (text, sub, index, item, itemIndex) => {
     // const newItem = { ...sub, name: text };
     const list = Array.from(data || []);
-    list[itemIndex].items.splice(index, 1, sub);
+    list[itemIndex].episodes.splice(index, 1, sub);
     setData(list);
     // const newItem = { ...sub };
     // const list = Array.from(data || []);
     // console.log(list)
     // const subList = list[itemIndex].items;
     // const subIndex =
-    //   Array.isArray(subList) && subList.findIndex((d) => d.id === sub.id);
+    //   Array.isArray(subList) && subList.findIndex((d) => d.title === sub.title);
     // Object.assign(newItem, { name: text });
     // list[itemIndex].items.splice(subIndex, 1, newItem);
     // setData(list);
   };
-
 
   const onSelectEpisode = (item, sub, itemIndex, subIndex) => {
     setItemIndex(itemIndex);
@@ -177,14 +220,14 @@ const DraggableList = () => {
     const selectedItem = data[itemIndex];
     if (selectedItem) {
       if (
-        Array.isArray(selectedItem.items) &&
-        selectedItem.items.length - 1 === subIndex
+        Array.isArray(selectedItem.episodes) &&
+        selectedItem.episodes.length - 1 === subIndex
       ) {
         if (itemIndex < data.length - 1) {
           setItemIndex(itemIndex + 1);
           setSubIndex(0);
         }
-      } else if (!selectedItem.items) {
+      } else if (!selectedItem.episodes) {
         setItemIndex(itemIndex + 1);
         setSubIndex(0);
       } else {
@@ -199,10 +242,10 @@ const DraggableList = () => {
       let selectedSubItem;
       if (
         selectedItem &&
-        Array.isArray(selectedItem.items) &&
-        selectedItem.items.length > 0
+        Array.isArray(selectedItem.episodes) &&
+        selectedItem.episodes.length > 0
       ) {
-        selectedSubItem = selectedItem.items[subIndex];
+        selectedSubItem = selectedItem.episodes[subIndex];
         if (selectedSubItem !== -1) {
           setItem(selectedItem);
           setSubItem(selectedSubItem);
@@ -216,7 +259,7 @@ const DraggableList = () => {
   return (
     <div>
       <Row>
-        <Col md={4}>
+        <Col md={6}>
           <DragDropContext
             onBeforeCapture={onBeforeCapture}
             onBeforeDragStart={onBeforeDragStart}
@@ -229,16 +272,16 @@ const DraggableList = () => {
                 <div
                   ref={provided.innerRef}
                   style={{
-                    backgroundColor: snapshot.isDraggingOver
-                      ? "darkorchid"
-                      : "lightblue",
+                    // backgroundColor: snapshot.isDraggingOver
+                    //   ? "darkorchid"
+                    //   : "lightblue",
                     padding: "20px 5px",
                   }}
                   {...provided.droppableProps}
                 >
                   {data.map((item, index) => (
                     <ListPanel
-                      key={index} // It should be replaced after connecting api
+                      key={item.item_id} // It should be replaced after connecting api
                       item={item}
                       index={index}
                       onDuplicate={() => onDuplicateItem(item, index)}
@@ -250,7 +293,7 @@ const DraggableList = () => {
                       onDisableSubItem={onDisableSubItem}
                       onInsertSubItem={onInsertSubItem}
                       onSelectEpisode={onSelectEpisode}
-                      collapseOpen={selectedItem && selectedItem.id}
+                      collapseOpen={selectedItem && selectedItem.title}
                       selctedEpisode={subItem}
                       onUpdateItem={onUpdateItem}
                       onUpdateSubItem={onUpdateSubItem}
@@ -262,7 +305,7 @@ const DraggableList = () => {
             </Droppable>
           </DragDropContext>
         </Col>
-        <Col md={20}>
+        <Col md={18}>
           <Content item={item} subItem={subItem} next={next} />
         </Col>
       </Row>

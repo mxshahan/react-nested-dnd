@@ -6,8 +6,8 @@ const Content = ({ item, subItem, next }) => {
     <Layout style={{ margin: 20 }}>
       <Result
         status="info"
-        title={<div>Course selected {item.name}</div>}
-        subTitle={<div>React Nested Drag and Drop: {subItem.name}</div>}
+        title={<div>Course selected {item.title}</div>}
+        subTitle={<div>React Nested Drag and Drop: {subItem.title}</div>}
         extra={[
           <Button type="primary" key="console" onClick={next}>
             Next

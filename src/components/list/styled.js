@@ -4,30 +4,34 @@ import ContentEditable from "react-contenteditable";
 
 export const ListItemStyled = styled(List.Item)`
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px 5px;
   background-color: ${(props) => (props.disabled ? "#ddd" : "#fff")};
+  border: 1px solid #efefef;
   article {
     color: ${(props) => (props.selected ? "#ff6c16" : "#000")};
   }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const PanelStyled = styled(Collapse.Panel)`
   border-bottom: 0px none !important;
   .ant-collapse-header {
     border-radius: 10px !important;
+    border: 1px solid #efefef;
     align-items: center;
     justify-content: space-between;
     display: flex;
     padding: 0px 5px !important;
+    background-color: #fff;
     ${(props) => {
       if (props.isDragging) {
         return { backgroundColor: "#6a2ae6" };
       } else if (props.selected) {
-        return { backgroundColor: "#6a2ae6", color: "white !important" };
-      } else {
-        return props.disabled
-          ? { backgroundColor: "#ddd" }
-          : { backgroundColor: "#fff" };
+        // return { backgroundColor: "#6a2ae6", color: "white !important" };
+      } else if (props.disabled) {
+        return { backgroundColor: "#ddd" };
       }
     }}
   }

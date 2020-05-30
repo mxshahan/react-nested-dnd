@@ -68,11 +68,11 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
   }, [collapseOpen]);
 
   const text = React.useRef(null);
-  const itemRef = React.useRef(item.id);
+  const itemRef = React.useRef(item.title);
 
   const onBlur = () => {
     if (text.current) {
-      Object.assign(item, { name: text.current });
+      Object.assign(item, { title: text.current });
       props.onUpdateItem(text.current, item, props.index);
     }
   };
@@ -82,7 +82,12 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
   };
 
   return (
-    <Draggable key={item.id} draggableId={String(item.id)} index={props.index}>
+    <Draggable
+      key={item.item_id}
+      draggableId={String(item.item_id)}
+      index={props.index}
+      isDragDisabled={item.disabled}
+    >
       {(provided, _snapshot) => (
         <div
           ref={provided.innerRef}
@@ -101,18 +106,19 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
             ref={itemRef}
           >
             <PanelStyled
-              key={item.id}
+              key={item.title}
               // isDragging={provided.isDraggingOver}
               header={
                 <div
                   className={`collapse_header `}
-                  {...(item.disabled ? {} : { ...provided.dragHandleProps })}
+                  // {...(item.disabled ? {} : { ...provided.dragHandleProps })}
+                  {...provided.dragHandleProps}
                 >
                   <EditableContainer>
                     <MenuOutlined onClick={onBlur} />
 
                     <EditableStyled
-                      html={item.name}
+                      html={item.title}
                       disabled={false}
                       onClick={preventCollapse}
                       onBlur={onBlur}
@@ -133,25 +139,25 @@ const ListPanel = ({ item, collapseOpen, selctedEpisode, ...props }) => {
               }
               showArrow={false}
               disabled={item.disabled}
-              selected={String(item.id) === String(active[0])}
+              selected={String(item.title) === String(active[0])}
             >
-              <Droppable droppableId={String(item.id)} type={"child"}>
+              <Droppable droppableId={String(item.item_id)} type={"child"}>
                 {(providedd, snapshot) => (
                   <div
                     ref={providedd.innerRef}
                     style={{
-                      backgroundColor: snapshot.isDraggingOver
-                        ? "#dfdfdf"
-                        : "#efefef",
+                      // backgroundColor: snapshot.isDraggingOver
+                      //   ? "#dfdfdf"
+                      //   : "#efefef",
                       padding: "5px",
                     }}
                     {...providedd.droppableProps}
                   >
-                    {Array.isArray(item.items) &&
-                      item.items.map((sub, index) => (
+                    {Array.isArray(item.episodes) &&
+                      item.episodes.map((sub, index) => (
                         <ListItem
-                          parentId={item.id}
-                          key={index} // It should be changed after connecting api
+                          parentId={item.item_id}
+                          key={sub.item_id} // It should be changed after connecting api
                           item={sub}
                           index={index}
                           selctedEpisode={selctedEpisode}

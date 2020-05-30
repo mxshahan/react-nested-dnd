@@ -1,229 +1,52 @@
 [
   {
-    "id": 1,
-    "name": "Baillie",
-    "description": "Gritton",
-    "items": [
+    "item_id": "kakasjdkk123123qu301231931kasd",
+    "title": "Intro",
+    "episodes": [
       {
-        "id": 1,
-        "name": "Bangladesh",
-        "description": "something"
+        "item_id": "jn1j11132138857482191341nk1345laaa",
+        "title": "Course plan"
       },
       {
-        "id": 2,
-        "name": "India",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "Pakistan",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "Afganistan",
-        "description": "something"
+        "item_id": "19918231o1okk1k1kwdn1o4u141oh1eklq1e13131111",
+        "title": "Setting up your environment"
       }
     ]
   },
   {
-    "id": 2,
-    "name": "Molly",
-    "description": "Murr",
-    "items": [
-      {
-        "id": 5,
-        "name": "Brazil",
-        "description": "something"
-      },
-      {
-        "id": 6,
-        "name": "Peru",
-        "description": "something"
-      },
-      {
-        "id": 7,
-        "name": "Franch",
-        "description": "something"
-      },
-      {
-        "id": 8,
-        "name": "Malasia",
-        "description": "something"
-      }
-    ]
+    "item_id": "Isdflkjjsdf90sdf098sd09f8",
+    "title": "Module 1",
+    "episodes": [],
+    "__typename": "Module"
   },
   {
-    "id": 3,
-    "name": "Margery",
-    "description": "Ivanov",
-    "items": null
+    "item_id": "Dfsdfesdfsesdfkjslkdjflkj",
+    "title": "Module 2",
+    "episodes": [],
+    "__typename": "Module"
   },
   {
-    "id": 4,
-    "name": "Lauretta",
-    "description": "Minmagh"
+    "item_id": "Jdhjhdhvnnkjdlfjlksjdlf",
+    "title": "Module 3",
+    "episodes": [],
+    "__typename": "Module"
   },
   {
-    "id": 5,
-    "name": "Rafael",
-    "description": "Rahl",
-    "items": [
-      {
-        "id": 1,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 2,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "something",
-        "description": "something"
-      }
-    ]
+    "item_id": "kakasjdkk99s9f09sdf123123qu301231931kasd",
+    "title": "Module 4",
+    "episodes": [],
+    "__typename": "Module"
   },
   {
-    "id": 6,
-    "name": "Selina",
-    "description": "Frensch",
-    "items": [
-      {
-        "id": 1,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 2,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "something",
-        "description": "something"
-      }
-    ]
+    "item_id": "33434sdfsdfsdfsdf",
+    "title": "Final exam",
+    "episodes": [],
+    "__typename": "Module"
   },
   {
-    "id": 7,
-    "name": "Clark",
-    "description": "Cudworth",
-    "items": [
-      {
-        "id": 1,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 2,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "something",
-        "description": "something"
-      }
-    ]
-  },
-  {
-    "id": 8,
-    "name": "Katinka",
-    "description": "Haylett",
-    "items": [
-      {
-        "id": 1,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 2,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "something",
-        "description": "something"
-      }
-    ]
-  },
-  {
-    "id": 9,
-    "name": "Ronnie",
-    "description": "Hillock",
-    "items": [
-      {
-        "id": 1,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 2,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "something",
-        "description": "something"
-      }
-    ]
-  },
-  {
-    "id": 10,
-    "name": "Brennen",
-    "description": "Eton",
-    "items": [
-      {
-        "id": 1,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 2,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 3,
-        "name": "something",
-        "description": "something"
-      },
-      {
-        "id": 4,
-        "name": "something",
-        "description": "something"
-      }
-    ]
+    "item_id": "sferw3434234234234234234",
+    "title": "Parting words",
+    "episodes": [],
+    "__typename": "Module"
   }
 ]

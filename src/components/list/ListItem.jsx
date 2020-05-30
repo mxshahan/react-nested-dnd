@@ -27,7 +27,7 @@ const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
 
   const onBlur = () => {
     if (text.current) {
-      Object.assign(item, { name: text.current });
+      Object.assign(item, { title: text.current });
       props.onUpdateSubItem(text.current, item);
     }
   };
@@ -38,15 +38,17 @@ const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
 
   return (
     <Draggable
-      key={item.id}
-      draggableId={"child-" + parentId + "-" + item.id}
+      key={item.item_id}
+      draggableId={"child-" + parentId + "-" + item.item_id}
       index={props.index}
+      isDragDisabled={item.disabled}
     >
       {(provided, _snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...(item.disabled ? {} : { ...provided.dragHandleProps })}
+          {...provided.dragHandleProps}
+          // {...(item.disabled ? {} : { ...provided.dragHandleProps })}
           style={{
             ...provided.draggableProps.style,
             marginTop: 10,
@@ -55,12 +57,12 @@ const ListItem = ({ item, parentId, selctedEpisode = {}, ...props }) => {
           <ListItemStyled
             disabled={item.disabled}
             onClick={props.onSelectEpisode}
-            selected={selctedEpisode && selctedEpisode.id === item.id}
+            selected={selctedEpisode && selctedEpisode.id === item.title}
           >
             <EditableContainer>
               <MenuOutlined onClick={onBlur} />
               <EditableStyled
-                html={item.name}
+                html={item.title}
                 disabled={false}
                 onBlur={onBlur}
                 onChange={onChangeName}
